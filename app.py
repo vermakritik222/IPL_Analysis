@@ -18,7 +18,7 @@ menu_bar = st.sidebar.radio(
         "Season Wise Analysis",
         "Team Wise Analysis",
         "Match Wise Analysis",
-        #        "Player Wise Analysis",
+        "Player Wise Analysis",
     ),
 )
 
@@ -103,7 +103,8 @@ if menu_bar == "Season Wise Analysis":
     #     )
 
     st.title("Comparision of No. of Matches Played VS No. of Matches Win")
-    plot = controller.plotOverallfrequencyOfWinnerNnoOfMatchesPlayed(working_df)
+    plot = controller.plotOverallfrequencyOfWinnerNnoOfMatchesPlayed(
+        working_df)
     st.plotly_chart(plot)
 
     st.title("Frequency of Matches in Different Cities")
@@ -133,13 +134,16 @@ if menu_bar == "Season Wise Analysis":
         "Select Plot Type", ["Line Plot", "Box Plot of 4's", "Box Plot of 6's"]
     )
     if PlotType == "Line Plot":
-        plot = controller.plotSeasonalRunDistribution(selected_Year, allTeamsS, df2)
+        plot = controller.plotSeasonalRunDistribution(
+            selected_Year, allTeamsS, df2)
         st.plotly_chart(plot)
     elif PlotType == "Box Plot of 4's":
-        plot = controller.boxPlotSeasonalRunDistribution(allTeamsS, df, df2, "4s")
+        plot = controller.boxPlotSeasonalRunDistribution(
+            allTeamsS, df, df2, "4s")
         st.plotly_chart(plot)
     elif PlotType == "Box Plot of 6's":
-        plot = controller.boxPlotSeasonalRunDistribution(allTeamsS, df, df2, "6s")
+        plot = controller.boxPlotSeasonalRunDistribution(
+            allTeamsS, df, df2, "6s")
         st.plotly_chart(plot)
 
     st.title("Over-wise runs distribution of season")
@@ -180,11 +184,14 @@ if menu_bar == "Team Wise Analysis":
         df, selected_year, selected_team
     )
 
-    YearTeamWin_id = YearTeam_df[YearTeam_df["winner"] == selected_team]["id"].tolist()
+    YearTeamWin_id = YearTeam_df[YearTeam_df["winner"]
+                                 == selected_team]["id"].tolist()
 
     Total_Matches_Played = YearTeam_df.shape[0]
-    Total_Matches_Win = YearTeam_df[YearTeam_df["winner"] == selected_team].shape[0]
-    total, s6, s4 = controller.TeamYearTotalData(YearTeamWin_id, selected_team, df2)
+    Total_Matches_Win = YearTeam_df[YearTeam_df["winner"]
+                                    == selected_team].shape[0]
+    total, s6, s4 = controller.TeamYearTotalData(
+        YearTeamWin_id, selected_team, df2)
 
     col1, col2 = st.columns(2)
     with col1:
@@ -216,7 +223,8 @@ if menu_bar == "Team Wise Analysis":
         "Select Comparision", ["None", "Compair with total runs"]
     )
     if compairWithTRun == "Compair with total runs":
-        plot2 = controller.plotYearTeamTopBatsman(YearTeam_id, selected_team, df2, True)
+        plot2 = controller.plotYearTeamTopBatsman(
+            YearTeam_id, selected_team, df2, True)
     else:
         plot2 = controller.plotYearTeamTopBatsman(
             YearTeam_id, selected_team, df2, False
@@ -228,9 +236,11 @@ if menu_bar == "Team Wise Analysis":
         "Select Comparision", ["None", "Compair with total wickets"]
     )
     if compairWithTWickets == "None":
-        plot3 = controller.plotYearTeamBowler(YearTeam_id, selected_team, df2, False)
+        plot3 = controller.plotYearTeamBowler(
+            YearTeam_id, selected_team, df2, False)
     else:
-        plot3 = controller.plotYearTeamBowler(YearTeam_id, selected_team, df2, True)
+        plot3 = controller.plotYearTeamBowler(
+            YearTeam_id, selected_team, df2, True)
     st.plotly_chart(plot3)
 
     st.title("Distribution of 4's and 6's")
@@ -238,7 +248,8 @@ if menu_bar == "Team Wise Analysis":
     st.plotly_chart(plot4)
 
     st.title("Run Distribution")
-    plot5 = controller.plotYearTeamRunDistribution(selected_year, selected_team, df2)
+    plot5 = controller.plotYearTeamRunDistribution(
+        selected_year, selected_team, df2)
     st.plotly_chart(plot5)
 
     st.title("Over wise Run Distribution")
@@ -308,8 +319,10 @@ if menu_bar == "Match Wise Analysis":
     stricktable2 = controller.teamMatchstrikers(
         MatchData["ID"], MatchData["team2"], df2
     )
-    bowler1 = controller.teamMatchBowler(MatchData["ID"], MatchData["team1"], df2)
-    bowler2 = controller.teamMatchBowler(MatchData["ID"], MatchData["team2"], df2)
+    bowler1 = controller.teamMatchBowler(
+        MatchData["ID"], MatchData["team1"], df2)
+    bowler2 = controller.teamMatchBowler(
+        MatchData["ID"], MatchData["team2"], df2)
 
     col1, col2 = st.columns(2)
     with col1:
@@ -339,11 +352,13 @@ if menu_bar == "Match Wise Analysis":
         st.table(team1)
 
     st.header("Plot of runs scored by player's of " + MatchData["team1"])
-    fig = controller.plotMatchbattingRuns(MatchData["ID"], MatchData["team1"], df2)
+    fig = controller.plotMatchbattingRuns(
+        MatchData["ID"], MatchData["team1"], df2)
     st.plotly_chart(fig)
 
     st.header("Plot of runs scored by player's of " + MatchData["team2"])
-    fig = controller.plotMatchbattingRuns(MatchData["ID"], MatchData["team2"], df2)
+    fig = controller.plotMatchbattingRuns(
+        MatchData["ID"], MatchData["team2"], df2)
     st.plotly_chart(fig)
 
     st.title("Over wise Runs Distribution")
@@ -361,3 +376,55 @@ if menu_bar == "Match Wise Analysis":
     st.title("Runs Rate")
     fig = controller.plotMatchRate(MatchData, df2)
     st.plotly_chart(fig)
+
+# ################   "Player Wise Analysis"
+if menu_bar == "Player Wise Analysis":
+    allPlayers = controller.AllBatsman(df2)
+    Years = controller.AllYears(df)
+    selected_Player = st.sidebar.selectbox("Select Player", allPlayers)
+    st.title(selected_Player)
+
+    working_df2 = df2[df2["batsman"] == selected_Player]
+
+    IDS = working_df2['id'].unique()
+    IDS = IDS.tolist()
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        TotalRunScoredTillNow = working_df2["batsman_runs"].sum()
+        st.metric(
+            label="Total Run Scored Till Now",
+            value=TotalRunScoredTillNow,
+        )
+    with col2:
+        TotalballPlayedTillNow = working_df2.shape[0]
+        st.metric(
+            label="Total ball Played Till Now",
+            value=TotalballPlayedTillNow,
+        )
+    with col3:
+        TotalMatchesTillNow = len(IDS)
+        st.metric(
+            label="Total Matches Played Till Now", value=TotalMatchesTillNow
+        )
+
+    st.title("Batsman Run With bowler")
+    plot = controller.plotBatsmanRunWithbowler(
+        working_df2, selected_Player)
+    st.plotly_chart(plot)
+
+    st.title("Season-Wise Run Distrubution")
+    plot = controller.plotRunSeason(
+        working_df2, selected_Player)
+    st.plotly_chart(plot)
+
+    st.title("Match-Wise Run Distrubution")
+    selected_Year = st.selectbox("Select Year", Years)
+    plot = controller.plotRunMatch(
+        working_df2, selected_Player, selected_Year, df)
+    st.plotly_chart(plot)
+
+    st.title("Distribution of 4's and 6's")
+    plot = controller.PlotPlayers6ands4(
+        working_df2, Years)
+    st.plotly_chart(plot)

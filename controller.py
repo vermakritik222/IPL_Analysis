@@ -26,16 +26,31 @@ def AllYears(df):
     return df["year"].unique().tolist()
 
 
+def AllPlayers(df2):
+    Players = np.concatenate((df2["batsman"].unique(), df2["bowler"].unique()))
+    Players.sort()
+    return Players
+
+
+def AllBatsman(df2):
+    batsman = df2["batsman"].unique()
+    batsman.sort()
+    return batsman
+
 # ############   "Overall Analysis",
 #
+
+
 def plotOverallYearsWiseWin(df, year):
     data = []
     for yr in year:
         data.append(
-            df[df["year"] == yr]["winner"].value_counts().reset_index().iloc[0]["index"]
+            df[df["year"] == yr]["winner"].value_counts(
+            ).reset_index().iloc[0]["index"]
         )
 
-    levels = np.tile([-5, 5, -3, 3, -1, 1], int(np.ceil(len(year) / 6)))[: len(year)]
+    levels = np.tile([-5, 5, -3, 3, -1, 1],
+                     int(np.ceil(len(year) / 6)))[: len(year)]
 
     fig, ax = plt.subplots(figsize=(8.8, 4), constrained_layout=True)
     ax.set(title="Season wise winers of IPL")
@@ -135,7 +150,8 @@ def plotOverallTop50PlayersOfAllTime(df):
     top50player_of_match = top50player_of_match.head(50)
     top50player_of_match.sort_values("player_of_match", inplace=True)
     top50player_of_match.rename(
-        columns={"index": "Player of Match", "player_of_match": "No. of Matches"},
+        columns={"index": "Player of Match",
+                 "player_of_match": "No. of Matches"},
         inplace=True,
     )
 
@@ -164,7 +180,8 @@ def plotOverallToss(df):
         toss,
         x="index",
         y=toss.columns,
-        labels={"value": "Count", "index": "Teams", "variable": "Toss Decision"},
+        labels={"value": "Count", "index": "Teams",
+                "variable": "Toss Decision"},
     )
     fig.update_traces(mode="markers+lines")
     return fig
@@ -201,8 +218,10 @@ def plotSeasonBowlers(ids, df2, compare):
             bowler_df.sort_values("ball", inplace=True, ascending=False)
         else:
             bowler_df.sort_values("is_wicket", inplace=True, ascending=False)
-        temp_bowler1 = bowler_df.reset_index()[["bowler", "is_wicket"]].iloc[0][0]
-        temp_wicket1 = bowler_df.reset_index()[["bowler", "is_wicket"]].iloc[0][1]
+        temp_bowler1 = bowler_df.reset_index(
+        )[["bowler", "is_wicket"]].iloc[0][0]
+        temp_wicket1 = bowler_df.reset_index(
+        )[["bowler", "is_wicket"]].iloc[0][1]
         if compare:
             temp_totalWickes1 = bowler_df.reset_index()["is_wicket"].sum()
 
@@ -214,8 +233,10 @@ def plotSeasonBowlers(ids, df2, compare):
         else:
             bowler_df.sort_values("is_wicket", inplace=True, ascending=False)
 
-        temp_bowler2 = bowler_df.reset_index()[["bowler", "is_wicket"]].iloc[0][0]
-        temp_wicket2 = bowler_df.reset_index()[["bowler", "is_wicket"]].iloc[0][1]
+        temp_bowler2 = bowler_df.reset_index(
+        )[["bowler", "is_wicket"]].iloc[0][0]
+        temp_wicket2 = bowler_df.reset_index(
+        )[["bowler", "is_wicket"]].iloc[0][1]
         if compare:
             temp_totalWickes2 = bowler_df.reset_index()["is_wicket"].sum()
 
@@ -287,13 +308,15 @@ def plotSeasonalRunDistribution(year, teams, df2):
     s6 = []
     for team in teams:
         s4.append(
-            df2[(df2["year"] == year) & (df2["batting_team"] == team)]["batsman_runs"]
+            df2[(df2["year"] == year) & (
+                df2["batting_team"] == team)]["batsman_runs"]
             .value_counts()
             .sort_index()
             .loc[4]
         )
         s6.append(
-            df2[(df2["year"] == year) & (df2["batting_team"] == team)]["batsman_runs"]
+            df2[(df2["year"] == year) & (
+                df2["batting_team"] == team)]["batsman_runs"]
             .value_counts()
             .sort_index()
             .loc[6]
@@ -320,7 +343,8 @@ def boxPlotSeasonalRunDistribution(teams, df, df2, mode):
     fig = go.Figure()
 
     for team in teams:
-        teamId = df[(df["team1"] == team) | (df["team2"] == team)]["id"].tolist()
+        teamId = df[(df["team1"] == team) | (
+            df["team2"] == team)]["id"].tolist()
         s = []
 
         for id in teamId:
@@ -349,7 +373,8 @@ def plotOverwiseRunDistributionOfSeason(teams, df, df2, QuartileMethod):
     temp_df = pd.DataFrame()
     fig = go.Figure()
     for team in teams:
-        teamId = df[(df["team1"] == team) | (df["team2"] == team)]["id"].tolist()
+        teamId = df[(df["team1"] == team) | (
+            df["team2"] == team)]["id"].tolist()
         runs = []
         for id in teamId:
             runs.append(
@@ -396,7 +421,8 @@ def plotTossSeasonStat(working_df):
         toss,
         x="index",
         y=toss.columns,
-        labels={"value": "Count", "index": "Teams", "variable": "Toss Decision"},
+        labels={"value": "Count", "index": "Teams",
+                "variable": "Toss Decision"},
     )
     fig.update_traces(mode="markers+lines")
     return fig
@@ -421,7 +447,8 @@ def TeamYearTotalData(ids, team, df2):
     s6 = 0
     s4 = 0
     for id in ids:
-        a = df2[(df2["id"] == id) & (df2["batting_team"] == team)]["total_runs"]
+        a = df2[(df2["id"] == id) & (
+            df2["batting_team"] == team)]["total_runs"]
         data += a.sum()
         s6 += a[a == 6].size
         s4 += a[a == 4].size
@@ -433,10 +460,12 @@ def getRunOfTeamYear(ids, team, df2):
     runs = []
     for id in ids:
         dates.append(
-            df2[(df2["id"] == id) & (df2["batting_team"] == team)]["date"].tolist()[0]
+            df2[(df2["id"] == id) & (df2["batting_team"] == team)
+                ]["date"].tolist()[0]
         )
         runs.append(
-            df2[(df2["id"] == id) & (df2["batting_team"] == team)]["total_runs"].sum()
+            df2[(df2["id"] == id) & (df2["batting_team"] == team)
+                ]["total_runs"].sum()
         )
     temp_df = pd.DataFrame()
     temp_df["Matches"] = dates
@@ -489,7 +518,8 @@ def plotYearTeamTopBatsman(ids, team, df2, compair):
     totalRun = []
     for id in ids:
         dates.append(
-            df2[(df2["id"] == id) & (df2["batting_team"] == team)]["date"].tolist()[0]
+            df2[(df2["id"] == id) & (df2["batting_team"] == team)
+                ]["date"].tolist()[0]
         )
         a = (
             df2[(df2["id"] == id) & (df2["batting_team"] == team)]
@@ -554,7 +584,8 @@ def plotYearTeamBowler(ids, team, df2, compair):
     totalWicket = []
     for id in ids:
         dates.append(
-            df2[(df2["id"] == id) & (df2["bowling_team"] == team)]["date"].tolist()[0]
+            df2[(df2["id"] == id) & (df2["bowling_team"] == team)
+                ]["date"].tolist()[0]
         )
         a = (
             df2[(df2["id"] == id) & (df2["bowling_team"] == team)]
@@ -627,7 +658,8 @@ def plotYearTeam4sN6s(ids, team, df2):
         flag6 = 0
         flag4 = 0
         dates.append(
-            df2[(df2["id"] == id) & (df2["batting_team"] == team)]["date"].tolist()[0]
+            df2[(df2["id"] == id) & (df2["batting_team"] == team)
+                ]["date"].tolist()[0]
         )
         x = (
             df2[(df2["id"] == id) & (df2["batting_team"] == team)]["batsman_runs"]
@@ -659,13 +691,15 @@ def plotYearTeam4sN6s(ids, team, df2):
     fig = make_subplots(rows=1, cols=1)
 
     fig.add_trace(
-        go.Scatter(x=temp_df["Matches"].tolist(), name="6's", y=temp_df["6s"].tolist()),
+        go.Scatter(x=temp_df["Matches"].tolist(),
+                   name="6's", y=temp_df["6s"].tolist()),
         row=1,
         col=1,
     )
 
     fig.add_trace(
-        go.Scatter(x=temp_df["Matches"].tolist(), name="4's", y=temp_df["4s"].tolist()),
+        go.Scatter(x=temp_df["Matches"].tolist(),
+                   name="4's", y=temp_df["4s"].tolist()),
         row=1,
         col=1,
     )
@@ -693,7 +727,8 @@ def plotYearTeamRunDistribution(year, team, df2):
         names=["Singels", "Doubles", "Triple", "4's", "6's"],
         values="batsman_runs",
         color="index",
-        color_discrete_map={1: "lightcyan", 2: "cyan", 4: "royalblue", 6: "darkblue"},
+        color_discrete_map={1: "lightcyan",
+                            2: "cyan", 4: "royalblue", 6: "darkblue"},
     )
     fig.update_traces(textposition="inside", textinfo="label+percent")
     return fig
@@ -701,7 +736,8 @@ def plotYearTeamRunDistribution(year, team, df2):
 
 def plotYearTeamOverWiseBoxplot(ids, team, df2):
     df = pd.DataFrame()
-    df["over"] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    df["over"] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+                  10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
 
     for id in ids:
         date = df2[(df2["id"] == id) & (df2["batting_team"] == team)]["date"].tolist()[
@@ -814,7 +850,8 @@ def plotMatchOverRun(ID, team, df2):
 def plotMatchOverRunBar(MatchData, df2):
     a = (
         df2[
-            (df2["id"] == MatchData["ID"]) & (df2["batting_team"] == MatchData["team1"])
+            (df2["id"] == MatchData["ID"]) & (
+                df2["batting_team"] == MatchData["team1"])
         ]
         .groupby("over")
         .sum()["total_runs"]
@@ -824,7 +861,8 @@ def plotMatchOverRunBar(MatchData, df2):
 
     b = (
         df2[
-            (df2["id"] == MatchData["ID"]) & (df2["batting_team"] == MatchData["team2"])
+            (df2["id"] == MatchData["ID"]) & (
+                df2["batting_team"] == MatchData["team2"])
         ]
         .groupby("over")
         .sum()["total_runs"]
@@ -845,7 +883,8 @@ def plotMatchOverRunBar(MatchData, df2):
 def plotMatchOverRunLine(MatchData, df2):
     a = (
         df2[
-            (df2["id"] == MatchData["ID"]) & (df2["batting_team"] == MatchData["team1"])
+            (df2["id"] == MatchData["ID"]) & (
+                df2["batting_team"] == MatchData["team1"])
         ]
         .groupby("over")
         .sum()["total_runs"]
@@ -855,7 +894,8 @@ def plotMatchOverRunLine(MatchData, df2):
 
     b = (
         df2[
-            (df2["id"] == MatchData["ID"]) & (df2["batting_team"] == MatchData["team2"])
+            (df2["id"] == MatchData["ID"]) & (
+                df2["batting_team"] == MatchData["team2"])
         ]
         .groupby("over")
         .sum()["total_runs"]
@@ -873,7 +913,8 @@ def plotMatchOverRunLine(MatchData, df2):
         inplace=True,
     )
 
-    fig = px.line(a, x="Over", y=a.columns, labels={"value": "Runs", "varible": "Team"})
+    fig = px.line(a, x="Over", y=a.columns, labels={
+                  "value": "Runs", "varible": "Team"})
     fig.update_layout(height=600, width=900)
     fig.update_traces(mode="markers+lines")
     return fig
@@ -881,20 +922,24 @@ def plotMatchOverRunLine(MatchData, df2):
 
 def plotMatchRate(MatchData, df2):
     a = df2[
-        (df2["id"] == MatchData["ID"]) & (df2["batting_team"] == MatchData["team1"])
+        (df2["id"] == MatchData["ID"]) & (
+            df2["batting_team"] == MatchData["team1"])
     ]
     a["ball"] = 1
-    a = a.groupby("batsman").sum().reset_index()[["batsman", "ball", "batsman_runs"]]
+    a = a.groupby("batsman").sum().reset_index()[
+        ["batsman", "ball", "batsman_runs"]]
 
     a["Rate"] = (a["batsman_runs"] / (a["ball"] / 6)) * 50
 
     a["Team"] = MatchData["team1"]
 
     b = df2[
-        (df2["id"] == MatchData["ID"]) & (df2["batting_team"] == MatchData["team2"])
+        (df2["id"] == MatchData["ID"]) & (
+            df2["batting_team"] == MatchData["team2"])
     ]
     b["ball"] = 1
-    b = b.groupby("batsman").sum().reset_index()[["batsman", "ball", "batsman_runs"]]
+    b = b.groupby("batsman").sum().reset_index()[
+        ["batsman", "ball", "batsman_runs"]]
 
     b["Rate"] = (b["batsman_runs"] / (b["ball"] / 6)) * 50
 
@@ -916,4 +961,72 @@ def plotMatchRate(MatchData, df2):
         title="Run Rate",
     )
     fig.update_layout(height=600, width=900)
+    return fig
+
+
+def plotBatsmanRunWithbowler(working_df2, Batsman):
+    temp = working_df2.groupby("bowler").sum()
+    temp.reset_index(inplace=True)
+    temp.sort_values("batsman_runs", inplace=True, ascending=False)
+    temp = temp[["bowler", "batsman_runs"]]
+
+    fig = px.bar(temp, x='bowler', y='batsman_runs', text='batsman_runs',
+                 title="{} vs Bowlers".format(Batsman))
+    fig.update_layout(height=600, width=900)
+    return fig
+
+
+def plotRunSeason(working_df2, Batsman):
+    temp = working_df2.groupby("year").sum()
+    temp.reset_index(inplace=True)
+    temp = temp[["year", "batsman_runs"]]
+
+    fig = px.bar(temp, x='year', y='batsman_runs', text='batsman_runs',
+                 title="{} vs Season".format(Batsman))
+    fig.update_layout(height=600, width=900)
+    return fig
+
+
+def plotRunMatch(working_df2, Batsman, year, df):
+    temp = working_df2.groupby("id").sum()
+    temp.reset_index(inplace=True)
+    temp = temp[["id", "batsman_runs"]]
+    temp_df = df[df['year'] == year][['id', "date", "team1", "team2"]]
+    temp = pd.merge(temp, temp_df, on='id', how='inner')
+    fig = make_subplots(rows=1, cols=1)
+    fig.add_trace(go.Bar(
+        x=temp["date"],
+        y=temp["batsman_runs"],
+        hovertemplate='%{text}' +
+        '<br>Matche: %{x}<br>' +
+        'Runs: %{y}<br>',
+        text=temp["team1"] + "  VS  "+temp["team2"],
+    ))
+    fig.update_layout(height=600, width=900)
+    return fig
+
+
+def PlotPlayers6ands4(working_df2, year):
+    ys6 = []
+    ys4 = []
+
+    for ye in year:
+        ys6.append(working_df2[(working_df2['year'] == ye) & (
+            working_df2['batsman_runs'] == 6)].shape[0])
+        ys4.append(working_df2[(working_df2['year'] == ye) & (
+            working_df2['batsman_runs'] == 4)].shape[0])
+
+    temp_df = pd.DataFrame()
+    temp_df["Year"] = year
+    temp_df["6's"] = ys6
+    temp_df["4's"] = ys4
+
+    fig = px.line(
+        temp_df,
+        x="Year",
+        y=["4's", "6's"],
+        labels={"value": "Count", 'variable': 'Boundaries'},
+    )
+    fig.update_layout(height=600, width=900)
+    fig.update_traces(mode="markers+lines")
     return fig
