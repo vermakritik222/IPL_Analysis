@@ -1,5 +1,5 @@
-﻿# IPL Analysis
-
+# IPL Analysis
+you can run application demo on heroku [here](https://yaaro2024-non-core-ipl-app-iptzu6.streamlitapp.com)
 ### 16 years of IPL data analysis, From 2008 to 2020.
 
 ## Project Description
